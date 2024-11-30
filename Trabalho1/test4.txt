@@ -1,0 +1,9 @@
+  Alice ; 30 ; Engenheira  
+Bob ; 25 ; Estudante
+  Carla ; 30 ; Professora  
+Diana ; 28 ; Estudante
+Eve ; 30 ; Engenheira
+Frank ; 28 ; Estudante
+
+
+

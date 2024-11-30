@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    
+    
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [
+        "-Wall"
+      ],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "c:/Users/simao/OneDrive/Desktop/ISEL/2ºano1semestre/PG2/Trabalho1",
+      "program": "c:/Users/simao/OneDrive/Desktop/ISEL/2ºano1semestre/PG2/Trabalho1/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+Alice;30;Engenheira
+bob;25;estudante
+CARLA;30;Professora
+diana;28;estudante
+EVE;30;ENGENHEIRA
+frank;28;estudante

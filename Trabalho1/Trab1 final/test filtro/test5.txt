@@ -1,0 +1,6 @@
+José;40;Médico
+Ana-Maria;35;Professora
+Luiz;28;Estudante
+Clara;22;Artista
+Renato;28;Estudante
+Sofia;30;Engenheira
