@@ -158,7 +158,7 @@ int cmpI(const void *a, const void *b)
     // Comparar pelo ISBN
     return strcmp(bookA->isbn, bookB->isbn);
 }
-int cmpII(const void *key, const void *elem)
+int cmpII(const void *key, const void *elem)    // Destinado a ser usado em bsearch
 {
     const BookData *book = *(const BookData **)elem; // Desreferencia o BookData pointer
     const BookData *isbnKey = (const BookData *)key; // Desreferencia o ponteiro

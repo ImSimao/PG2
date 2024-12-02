@@ -9,18 +9,18 @@
 
 
 VecBookRef *vecRefCreate(void) {
-    VecBookRef *vr = (VecBookRef *)malloc(sizeof(VecBookRef));
-    if (vr == NULL) {
+    VecBookRef *vec = (VecBookRef *)malloc(sizeof(VecBookRef));
+    if (vec == NULL) {
         return NULL; // MemAlloc fail
     }
-    vr->size = 0;
-    vr->space = 10; // Valor Inicial
-    vr->refs = (Book **)malloc(vr->space * sizeof(Book *));
-    if (vr->refs == NULL) {
-        free(vr);
+    vec->size = 0;
+    vec->space = 10; // Valor Inicial
+    vec->refs = (Book **)malloc(vec->space * sizeof(Book *));
+    if (vec->refs == NULL) {
+        free(vec);
         return NULL; // MemAlloc fail
     }
-    return vr;
+    return vec;
 }
 
 
@@ -43,16 +43,16 @@ int vecRefAdd(VecBookRef *vec, Book *book) {
 
 
 
-void vecRefSize( VecBookRef *vr ){
-    if (vr != NULL) return vr->size;
+void vecRefSize( VecBookRef *vec ){
+    if (vec != NULL) return vec->size;
     else return 0;
 
 }
 
 
-Book *vecRefGet( VecBookRef *vr, int index ){
-    if (vr== NULL || index == vr->size) return NULL;
-    return vr->refs[index];
+Book *vecRefGet( VecBookRef *vec, int index ){
+    if (vec== NULL || index == vec->size) return NULL;
+    return vec->refs[index];
 }
 
 
@@ -64,29 +64,41 @@ int cmpTitle(const void *a, const void *b)
     return strcmp_ic(a1->title, b1->title);
 }
 
-void vecRefSortTitle( VecBookRef *vr ){
-    if (vr != NULL){
-        qsort(vr->refs, vr->size, sizeof(Book *), cmpTitle);
+void vecRefSortTitle( VecBookRef *vec ){
+    if (vec != NULL){
+        qsort(vec->refs, vec->size, sizeof(Book *), cmpTitle);
     }
     
 }
 
 
-void vecRefSortIsbn( VecBookRef *vr ){
+void vecRefSortIsbn( VecBookRef *vec ){
 
-    if (vr != NULL)
+    if (vec != NULL)
     {
-        qsort(vr->refs, vr->size, sizeof(Book *), cmpI);
+        qsort(vec->refs, vec->size, sizeof(Book *), cmpI);
     }
     
 }
 
 
-Book *vecRefSearchIsbn( VecBookRef *vr, char *isbn ){
+Book *vecRefSearchIsbn( VecBookRef *vec, char *isbn ){
 
+    if(vec == NULL || *isbn == NULL) return NULL;
+    vecRefSortIsbn(vec);
+    return bsearch(isbn, vec->refs, vec->size, sizeof(Book *), cmpII);
 }
 
 
-void vecRefFree( VecBookRef *vr, int freeBooks ){
+void vecRefFree(VecBookRef *vec, int freeBooks) {
+    if (vec == NULL) return; 
 
+    if (freeBooks) {
+        for (int i = 0; i < vec->size; i++) {
+            free(vec->refs[i]); // Libertar cada descritor de livro
+        }
+    }
+
+    free(vec->refs); // Libertar o array de referências
+    free(vec); // Libertar o vetor em si
 }
