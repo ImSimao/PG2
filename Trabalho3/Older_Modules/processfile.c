@@ -5,10 +5,12 @@
 
 #include "processfile.h"
 #include "filtros.h"
-#include "../ex2/Sbooks.h"
+#include "Sbooks.h"
 
 
 #include "../SLib.h"
+#include "../VecManage.h"
+#include "../CollManage.h"
 
 #define MAX_LINE_LENGTH 512
 
@@ -240,7 +242,7 @@ Book *bookCreate(const char *line) {
     Book *b = (Book *)malloc(sizeof(Book));
     
     if (b == NULL) {
-        return NULL; // Memory allocation failed
+        return NULL; // MemAlloc fail
     }
 
     // Allocate memory for title, authors, and publisher

@@ -3,6 +3,7 @@
 
 #include "SLib.h"
 #include "processfile.h"
+#include "VecManage.h"
 
 
 
@@ -46,8 +47,8 @@ int vecRefAdd(VecBookRef *vec, Book *book) {
 void vecRefSize( VecBookRef *vec ){
     if (vec != NULL) return vec->size;
     else return 0;
-
 }
+
 
 
 Book *vecRefGet( VecBookRef *vec, int index ){

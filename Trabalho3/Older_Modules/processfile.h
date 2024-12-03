@@ -2,7 +2,8 @@
 #ifndef PROCESSFILE_H
 #define PROCESSFILE_H
 
-#include "../ex2/Sbooks.h"
+#include "Sbooks.h"
+#include "../SLib.h"
 
 int processFile(const char *filename,
                 int (*action)(const char *line, void *context),
