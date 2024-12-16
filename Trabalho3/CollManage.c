@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 
 #include "VecManage.h"
@@ -16,15 +17,20 @@
 DynCollection *dynCollCreate(void) {
     DynCollection *col = (DynCollection *)malloc(sizeof(DynCollection));
     if (col == NULL) {
-        return NULL; // MemAlloc fail
+        return NULL;
     }
 
-    col->titleVec = vecRefCreate(); // Inicializa titleVec
-    col->isbnVec = vecRefCreate(); // Inicializa isbnVec
-
-    if (col->titleVec == NULL || col->isbnVec == NULL) {
+    col->titleVec = vecRefCreate();
+    if (col->titleVec == NULL) {
         free(col);
-        return NULL; // MemAlloc fail
+        return NULL;
+    }
+
+    col->isbnVec = vecRefCreate();
+    if (col->isbnVec == NULL) {
+        vecRefFree(col->titleVec, 0); // Não libera os livros pois ainda não existem
+        free(col);
+        return NULL;
     }
 
     return col;
@@ -32,27 +38,37 @@ DynCollection *dynCollCreate(void) {
 
 
 
-int dynCollAddBook( const char *line, void *context ){  //Rever // Erro de logica possivelmente em Context = vr
-
+int dynCollAddBook(const char *line, void *context) {
     if (line == NULL || context == NULL) return 0;
 
-    Book *b = bookCreate(*line);
-    VecBookRef *vr = vecRefCreate();
-    vr = vecRefAdd(vr, b);
+    DynCollection *coll = (DynCollection *)context;
+    Book *b = bookCreate(line);
+    if (b == NULL) return 0;
 
-    if( b == NULL || vr == NULL) return 0;
+    // Primeiro tenta adicionar ao vetor de títulos
+    if (vecRefAdd(coll->titleVec, b) != 0) {
+        bookFree(b);
+        return 0;
+    }
 
-    context = vr;
+    // Se falhar ao adicionar ao vetor ISBN, desfaz a adição ao vetor de títulos
+    if (vecRefAdd(coll->isbnVec, b) != 0) {
+        // Remove do vetor de títulos (última posição)
+        coll->titleVec->size--;
+        bookFree(b);
+        return 0;
+    }
 
     return 1;
-    
-    
 }
 
-void dynCollFill( DynCollection *coll, FILE *f ){
+void dynCollFill(DynCollection *coll, const char *f) {
+    if (coll == NULL || f == NULL) return; // Verifica se a coleção e o arquivo são válidos
 
+    // Preenche a coleção usando processFile e dynCollAddBook
     processFile(f, dynCollAddBook, coll);
 
+    // Ordena os vetores de referências pelos critérios especificados
     vecRefSortTitle(coll->titleVec);
     vecRefSortIsbn(coll->isbnVec);
     return;

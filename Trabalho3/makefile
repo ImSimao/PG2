@@ -8,7 +8,7 @@ CFLAGS = -Wall -g
 TARGETS = main
 
 # Ficheiros de objetos comuns
-COMMON_OBJS = Older_Modules/processfile.o Older_Modules/filtros.o
+COMMON_OBJS = Older_Modules/processfile.o Older_Modules/filtros.o CollManage.o VecManage.o
 
 # Alvo padrão
 default: all

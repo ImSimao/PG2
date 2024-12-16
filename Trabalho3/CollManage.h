@@ -10,7 +10,7 @@ DynCollection *dynCollCreate( void );
 
 int dynCollAddBook( const char *line, void *context );
 
-void dynCollFill( DynCollection *coll, FILE *f ); 
+void dynCollFill(DynCollection *coll, const char *f); 
 
 void dynCollFree( DynCollection *coll );
 

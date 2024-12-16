@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "Older_Modules/processfile.h"
 #include "SLib.h"
@@ -20,7 +21,11 @@ int main(int argc, char *argv[]){
     }
     DynCollection *col = dynCollCreate();
 
+
     dynCollFill(col, argv[1]);
+
+    
+    
 
     char input[MAX_INPUT];
     while (1) {
@@ -34,6 +39,7 @@ int main(int argc, char *argv[]){
         input[strcspn(input, "\n")] = '\0'; //strcspn retorna o tamanho da string ate o primeiro '\n'
 
         if (strcmp(input, "q") == 0) {
+            dynCollFree(col);
             break; // QUIT
         } else if (strcmp(input, "l") == 0) {
             

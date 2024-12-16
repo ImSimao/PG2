@@ -8,7 +8,7 @@ VecBookRef *vecRefCreate(void);
 
 int vecRefAdd(VecBookRef *vec, Book *book);
 
-void vecRefSize( VecBookRef *vec );
+int vecRefSize( VecBookRef *vec );
 
 Book *vecRefGet( VecBookRef *vec, int index );
 

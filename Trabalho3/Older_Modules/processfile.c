@@ -243,12 +243,13 @@ Book *bookCreate(const char *line) {
     
     if (b == NULL) {
         return NULL; // MemAlloc fail
-    }
+    } 
+    
 
     // Allocate memory for title, authors, and publisher
-    b->title = (char *)malloc(MAX_TITLE * sizeof(char));
-    b->authors = (char *)malloc(MAX_AUTHORS * sizeof(char));
-    b->publisher = (char *)malloc(MAX_PUB_NAME * sizeof(char));
+    b->title = (char *)malloc(MAX_TITLE);   //alterar -> não faz sentido usar memoria estatica com mallocs
+    b->authors = (char *)malloc(MAX_AUTHORS);   // usar splitflied por campo e depois strlen
+    b->publisher = (char *)malloc(MAX_PUB_NAME);
 
     if (b->title == NULL || b->authors == NULL || b->publisher == NULL) {
         bookFree(b); // Free previously allocated memory

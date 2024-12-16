@@ -2,8 +2,9 @@
 
 
 #include "SLib.h"
-#include "processfile.h"
+#include "Older_Modules/processfile.h"
 #include "VecManage.h"
+#include "Older_Modules/filtros.h"
 
 
 
@@ -44,7 +45,7 @@ int vecRefAdd(VecBookRef *vec, Book *book) {
 
 
 
-void vecRefSize( VecBookRef *vec ){
+int vecRefSize( VecBookRef *vec ){
     if (vec != NULL) return vec->size;
     else return 0;
 }
@@ -57,11 +58,10 @@ Book *vecRefGet( VecBookRef *vec, int index ){
 }
 
 
-
 int cmpTitle(const void *a, const void *b)
 {
-    Book *a1 = (Book **)a;
-    Book *b1 = (Book **)b;
+    const Book *a1 = *(const Book **)a; // Desreferencia o ponteiro
+    const Book *b1 = *(const Book **)b; // Desreferencia o ponteiro
     return strcmp_ic(a1->title, b1->title);
 }
 
@@ -85,7 +85,7 @@ void vecRefSortIsbn( VecBookRef *vec ){
 
 Book *vecRefSearchIsbn( VecBookRef *vec, char *isbn ){
 
-    if(vec == NULL || *isbn == NULL) return NULL;
+    if(vec == NULL || isbn == NULL) return NULL;
     vecRefSortIsbn(vec);
     return bsearch(isbn, vec->refs, vec->size, sizeof(Book *), cmpII);
 }
@@ -96,7 +96,7 @@ void vecRefFree(VecBookRef *vec, int freeBooks) {
 
     if (freeBooks) {
         for (int i = 0; i < vec->size; i++) {
-            free(vec->refs[i]); // Libertar cada descritor de livro
+            bookFree(vec->refs[i]); // Libertar cada descritor de livro
         }
     }
 
