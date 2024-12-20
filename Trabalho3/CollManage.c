@@ -75,10 +75,16 @@ void dynCollFill(DynCollection *coll, const char *f) {
 }
 
 
-void dynCollFree( DynCollection *coll ){
-
-    vecRefFree(coll->isbnVec, True);        //ver em que lib, True se encontra
-    vecRefFree(coll->titleVec, True);
+void dynCollFree(DynCollection *coll) {
+    if (coll == NULL) {
+        printf("Warning: Attempted to free a NULL collection.\n");
+        return; // Prevents dereferencing a NULL pointer
+    }
+    
+    //printf("Freeing ISBN vector...\n");
+    vecRefFree(coll->isbnVec, True); 
+    //printf("Freeing Title vector...\n");
+    vecRefFree(coll->titleVec, False);
+    //printf("Freeing collection...\n");
     free(coll);
-    return;
 }

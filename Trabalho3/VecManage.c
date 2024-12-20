@@ -1,5 +1,5 @@
 #include <stdlib.h>
-
+#include <stdio.h>
 
 #include "SLib.h"
 #include "Older_Modules/processfile.h"
@@ -92,14 +92,20 @@ Book *vecRefSearchIsbn( VecBookRef *vec, char *isbn ){
 
 
 void vecRefFree(VecBookRef *vec, int freeBooks) {
-    if (vec == NULL) return; 
+    if (vec == NULL) {
+        printf("Warning: Attempted to free a NULL vector.\n");
+        return; 
+    }
+    
+    //printf("Freeing vector with size: %d\n", vec->size);
 
     if (freeBooks) {
         for (int i = 0; i < vec->size; i++) {
             bookFree(vec->refs[i]); // Libertar cada descritor de livro
         }
     }
-
+    //printf("Freeing references...\n");
     free(vec->refs); // Libertar o array de referências
+    //printf("Freeing vector...\n");
     free(vec); // Libertar o vetor em si
 }

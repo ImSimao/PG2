@@ -245,51 +245,55 @@ Book *bookCreate(const char *line) {
         return NULL; // MemAlloc fail
     } 
     
-
-    // Allocate memory for title, authors, and publisher
-    b->title = (char *)malloc(MAX_TITLE);   //alterar -> não faz sentido usar memoria estatica com mallocs
-    b->authors = (char *)malloc(MAX_AUTHORS);   // usar splitflied por campo e depois strlen
-    b->publisher = (char *)malloc(MAX_PUB_NAME);
-
-    if (b->title == NULL || b->authors == NULL || b->publisher == NULL) {
-        bookFree(b); // Free previously allocated memory
-        return NULL; // Memory allocation failed
-    }
-
-    // Parse the line to fill the book data
-    char *lineCopy = strdup(line); // Duplicate line   \\ no need to alloc mem bc strdup
+    char *lineCopy = strdup(line); // Duplicar linha
     if (lineCopy == NULL) {
         bookFree(b);
-        return NULL; // Memory allocation failed
+        return NULL; // Falha na alocação de memória
     }
 
     char *token = strtok(lineCopy, ";");
     if (token != NULL) {
-        strncpy(b->title, token, MAX_TITLE);
-        b->title[MAX_TITLE - 1] = '\0'; // Ensure null-termination
+        b->title = (char *)malloc(strlen(token) + 1);
+        if (b->title == NULL) {
+            free(lineCopy);
+            bookFree(b);
+            return NULL; // Falha na alocação de memória
+        }
+        strcpy(b->title, token); // Copiar o título
     }
 
     token = strtok(NULL, ";");
     if (token != NULL) {
-        strncpy(b->isbn, token, MAX_ISBN);
-        b->isbn[MAX_ISBN - 1] = '\0'; // Ensure null-termination
+        // Presumindo que b->isbn é um array de caracteres já alocado
+        strncpy(b->isbn, token, MAX_ISBN - 1);
+        b->isbn[MAX_ISBN - 1] = '\0'; // Garantir que a string esteja terminada
     }
 
-    token = strtok(NULL, ";");  //SKIP ISBN-13
+    token = strtok(NULL, ";");  // Pular ISBN-13
     token = strtok(NULL, ";");
     if (token != NULL) {
-        strncpy(b->authors, token, MAX_AUTHORS);
-        b->authors[MAX_AUTHORS - 1] = '\0'; // Ensure null-termination
+        b->authors = (char *)malloc(strlen(token) + 1);
+        if (b->authors == NULL) {
+            free(lineCopy);
+            bookFree(b);
+            return NULL; // Falha na alocação de memória
+        }
+        strcpy(b->authors, token); // Copiar os autores
     }
 
     token = strtok(NULL, ";");
     if (token != NULL) {
-        strncpy(b->publisher, token, MAX_PUB_NAME);
-        b->publisher[MAX_PUB_NAME - 1] = '\0'; // Ensure null-termination
+        b->publisher = (char *)malloc(strlen(token) + 1);
+        if (b->publisher == NULL) {
+            free(lineCopy);
+            bookFree(b);
+            return NULL; // Falha na alocação de memória
+        }
+        strcpy(b->publisher, token); // Copiar o nome do editor
     }
 
-    free(lineCopy); // Free the duplicated line
-    return b; // Return the created book
+    free(lineCopy); // Liberar a linha duplicada
+    return b; // Retornar o livro
 }
     
 void bookFree(Book *b) {
