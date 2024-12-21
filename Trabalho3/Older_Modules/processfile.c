@@ -239,12 +239,17 @@ Book *bookCreate(const char *line) {
         return NULL; // Invalid line
     }
 
-    Book *b = (Book *)malloc(sizeof(Book));
-    
+    Book *b = malloc(sizeof(Book));
     if (b == NULL) {
         return NULL; // MemAlloc fail
-    } 
-    
+    }
+
+    // Inicializar todos os campos
+    b->title = NULL;
+    b->authors = NULL;
+    b->publisher = NULL;
+    b->isbn[0] = '\0'; // Inicializa o ISBN como uma string vazia
+
     char *lineCopy = strdup(line); // Duplicar linha
     if (lineCopy == NULL) {
         bookFree(b);
@@ -304,5 +309,16 @@ void bookFree(Book *b) {
         free(b);
     }
 }
+
+
+int cmpISBN(const void *a, const void *b) {
+    // Desreferencia os ponteiros para obter os livros
+    const Book *bookA = *(const Book **)a; // Desreferencia a primeira referência
+    const Book *bookB = *(const Book **)b; // Desreferencia a segunda referência
+
+    // Compara os ISBNs dos livros
+    return strcmp(bookA->isbn, bookB->isbn);
+}
+
 
 

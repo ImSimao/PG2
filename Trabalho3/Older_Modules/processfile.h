@@ -40,6 +40,8 @@ Book *bookCreate(const char *line);
 
 void bookFree(Book *b);
 
+int cmpISBN(const void *a, const void *b);
+
 
 
 #endif

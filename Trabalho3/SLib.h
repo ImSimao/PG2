@@ -1,12 +1,14 @@
 #ifndef SLIB_H
 #define SLIB_H
 
-#define MAX_BOOKS 300 //296
-#define MAX_TITLE 256 //200
-#define MAX_ISBN 16  //10-13
-#define MAX_AUTHORS 128 // 92
-#define MAX_PUB_NAME 64 // 51
 
+#define MAX_ISBN 16  //10-13
+
+
+#define BLOCKSIZE 20
+
+#define True 1
+#define False 0
 
 typedef struct {  // Descritor dos dados de um livro 
  char *title;  //  string alojada dinamicamente 

@@ -7,18 +7,18 @@
 #include "SLib.h"
 #include "Older_Modules/processfile.h"
 
-#define True 1
-#define False 0
+
 
 
 
 
 
 DynCollection *dynCollCreate(void) {
-    DynCollection *col = (DynCollection *)malloc(sizeof(DynCollection));
+    DynCollection *col = malloc(sizeof(*col));
     if (col == NULL) {
         return NULL;
     }
+
 
     col->titleVec = vecRefCreate();
     if (col->titleVec == NULL) {
@@ -26,12 +26,14 @@ DynCollection *dynCollCreate(void) {
         return NULL;
     }
 
+
     col->isbnVec = vecRefCreate();
     if (col->isbnVec == NULL) {
         vecRefFree(col->titleVec, 0); // Não libera os livros pois ainda não existem
         free(col);
         return NULL;
     }
+
 
     return col;
 }
@@ -41,20 +43,20 @@ DynCollection *dynCollCreate(void) {
 int dynCollAddBook(const char *line, void *context) {
     if (line == NULL || context == NULL) return 0;
 
-    DynCollection *coll = (DynCollection *)context;
+    DynCollection *col = (DynCollection *)context;
     Book *b = bookCreate(line);
     if (b == NULL) return 0;
 
     // Primeiro tenta adicionar ao vetor de títulos
-    if (vecRefAdd(coll->titleVec, b) != 0) {
+    if (vecRefAdd(col->titleVec, b) != 0) {
         bookFree(b);
         return 0;
     }
 
     // Se falhar ao adicionar ao vetor ISBN, desfaz a adição ao vetor de títulos
-    if (vecRefAdd(coll->isbnVec, b) != 0) {
+    if (vecRefAdd(col->isbnVec, b) != 0) {
         // Remove do vetor de títulos (última posição)
-        coll->titleVec->size--;
+        col->titleVec->size--;
         bookFree(b);
         return 0;
     }
@@ -62,11 +64,11 @@ int dynCollAddBook(const char *line, void *context) {
     return 1;
 }
 
-void dynCollFill(DynCollection *coll, const char *f) {
-    if (coll == NULL || f == NULL) return; // Verifica se a coleção e o arquivo são válidos
+void dynCollFill(DynCollection *coll, const char *filename) {
+    if (coll == NULL || filename == NULL) return; // Verifica se a coleção e o arquivo são válidos
 
     // Preenche a coleção usando processFile e dynCollAddBook
-    processFile(f, dynCollAddBook, coll);
+    processFile(filename, dynCollAddBook, coll);
 
     // Ordena os vetores de referências pelos critérios especificados
     vecRefSortTitle(coll->titleVec);
