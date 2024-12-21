@@ -58,9 +58,8 @@ void lRefPrint(LNode *head) {
     // Percorre a lista e imprime os dados dos livros
     while (current != NULL) {
         // Imprime os dados do livro
-        printf("Título: %s\n", current->ref->title);
-        printf("Autor: %s\n", current->ref->authors);
-        printf("ISBN: %s\n\n", current->ref->isbn);
+        printf("Título: %s; ISBN: %s; Autor(es): %s ; Editora: %s ;\n",
+                current->ref->title, current->ref->isbn, current->ref->authors, current->ref->publisher);
 
         current = current->next; // Avança para o próximo nó
     }

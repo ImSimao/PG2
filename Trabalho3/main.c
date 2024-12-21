@@ -2,13 +2,17 @@
 #include <string.h>
 
 #include "Older_Modules/processfile.h"
+
 #include "SLib.h"
 #include "CollManage.h"
 #include "VecManage.h"
 
+#include "TreeNode.h" 
+#include "ListNode.h" 
+
 #define MAX_INPUT 128
 
-
+TNode *authorTree = NULL; // Global variable for the binary search tree
 
 int main(int argc, char *argv[])
 {
@@ -26,7 +30,18 @@ int main(int argc, char *argv[])
 	}
     dynCollFill(col, fileName);
 
-
+    // Initialize the binary search tree for authors
+    for (int i = 1; i < vecRefSize(col->titleVec); i++)
+    {
+        Book *book = vecRefGet(col->titleVec, i);
+        char *authors = book->authors;
+        char *token = strtok(authors, " "); // Split authors by space
+        while (token != NULL)
+        {
+            bstAdd(&authorTree, token, book); // Add each word to the BST
+            token = strtok(NULL, " "); // Get the next word
+        }
+    }
 
     char input[MAX_INPUT];
     while (True)
@@ -45,6 +60,7 @@ int main(int argc, char *argv[])
         {
             //printf("Freeing collection...\n"); // Debugging 
             dynCollFree(col);
+            bstFree(authorTree); // Free the BST
             //printf("Collection freed.\n"); // Debugging 
             break;                         // QUIT
         }
@@ -80,6 +96,21 @@ int main(int argc, char *argv[])
             else
             {
                 printf("Livro com ISBN %s não encontrado.\n", isbn);
+            }
+        }
+        else if (strncmp(input, "a ", 2) == 0) // Check if the command starts with "a "
+        {
+            char author[MAX_INPUT];
+            sscanf(input + 2, "%s", author); // Read the author's name after the command "a "
+
+            LNode *foundBooks = bstSearch(authorTree, author); // Search for the author in the BST
+            if (foundBooks != NULL)
+            {
+                lRefPrint(foundBooks); // Print the list of books for the author
+            }
+            else
+            {
+                printf("Nenhum livro encontrado para o autor %s.\n", author);
             }
         }
     }
