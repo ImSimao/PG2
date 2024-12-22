@@ -1,6 +1,7 @@
 #include "TreeNode.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 
 
@@ -33,62 +34,50 @@ void bstAdd(TNode **rootPtr, char *namWord, Book *ref) {
     }
 }
 
-
-// Função auxiliar para coletar os nós em uma lista
+// Função auxiliar para coletar nós em ordem
 void collectNodes(TNode *root, TNode **nodes, int *index) {
     if (root == NULL) {
         return;
     }
-    // Coleta os nós da subárvore esquerda
-    collectNodes(root->left, nodes, index);
-    // Adiciona o nó atual à lista
-    nodes[(*index)++] = root;
-    // Coleta os nós da subárvore direita
-    collectNodes(root->right, nodes, index);
+    collectNodes(root->left, nodes, index); // Visita a subárvore esquerda
+    nodes[(*index)++] = root; // Adiciona o nó atual ao vetor
+    collectNodes(root->right, nodes, index); // Visita a subárvore direita
 }
 
-// Função auxiliar para construir uma árvore balanceada a partir da lista de nós
-TNode* buildBalancedTree(TNode **nodes, int start, int end) {
+// Função auxiliar para construir uma árvore balanceada a partir de um vetor
+TNode *buildBalancedTree(TNode **nodes, int start, int end) {
     if (start > end) {
         return NULL;
     }
-    int mid = (start + end) / 2; // Encontra o ponto médio
-    TNode *node = nodes[mid];    // O nó do meio se torna a raiz da subárvore
-    // Constrói a subárvore esquerda e direita
-    node->left = buildBalancedTree(nodes, start, mid - 1);
-    node->right = buildBalancedTree(nodes, mid + 1, end);
+    int mid = (start + end) / 2; // Encontra o meio do vetor
+    TNode *node = nodes[mid]; // O nó do meio se torna a raiz da subárvore
+    node->left = buildBalancedTree(nodes, start, mid - 1); // Constrói a subárvore esquerda
+    node->right = buildBalancedTree(nodes, mid + 1, end); // Constrói a subárvore direita
     return node;
 }
 
-// Função para balancear a árvore
+// Função principal para balancear a árvore
 void bstBalance(TNode **rootPtr) {
     if (*rootPtr == NULL) {
         return; // Se a árvore estiver vazia, não faz nada
     }
 
-    // Coleta todos os nós da árvore em um array
+    // Coleta todos os nós em um vetor
     int size = 0;
-    TNode **nodes = (TNode **)malloc(sizeof(TNode *) * 1000); // Alocação inicial
-    if (nodes == NULL) {
-        return; // Falha na alocação de memória
-    }
-
+    TNode *nodes[1000]; // Supondo que a árvore não terá mais de 1000 nós
     collectNodes(*rootPtr, nodes, &size);
 
-    // Libera a memória da árvore antiga
-    bstFree(*rootPtr);
-
-    // Constrói uma nova árvore balanceada a partir da lista de nós
+    // Reconstrói a árvore balanceada
     *rootPtr = buildBalancedTree(nodes, 0, size - 1);
-
-    // Libera a memória do array de nós
-    free(nodes);
 }
+
 
 LNode *bstSearch(TNode *root, char *namWord) {
     if (root == NULL) {
         return NULL; // Palavra não encontrada
     }
+
+    
 
     int cmp = strcmp(namWord, root->word);
     if (cmp < 0) {

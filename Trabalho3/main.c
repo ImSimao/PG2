@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
             token = strtok(NULL, " "); // Get the next word
         }
     }
+    bstBalance(&authorTree);  
 
     char input[MAX_INPUT];
     while (True)
