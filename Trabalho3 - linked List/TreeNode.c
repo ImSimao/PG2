@@ -88,14 +88,14 @@ TNode *sortedListToBalancedTree(TNode **listRoot, int n) {
 void bstBalance(TNode **rootPtr) {
     if (rootPtr == NULL || *rootPtr == NULL) return;
 
-    // Passo 1: Converter a árvore em uma lista encadeada ordenada
+    //Converter a árvore em uma lista encadeada ordenada
     TNode *sortedList = NULL;
     sortedList = treeToSortedList(*rootPtr, sortedList);
 
-    // Passo 2: Contar o número de nós
+    // Contar o número de nós
     int nodeCount = countNodes(*rootPtr);
 
-    // Passo 3: Criar uma nova árvore balanceada a partir da lista
+    // Criar uma nova árvore balanceada a partir da lista
     TNode *balancedTree = sortedListToBalancedTree(&sortedList, nodeCount);
 
     // Atualizar o ponteiro da raiz para a nova árvore balanceada

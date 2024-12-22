@@ -32,10 +32,11 @@ int main(int argc, char *argv[])
 	}
     dynCollFill(col, fileName);
 
-    // Initialize the binary search tree for authors
+    // Innit the binary search tree for authors
     for (int i = 1; i < vecRefSize(col->titleVec); i++){
-        Book *book = vecRefGet(col->titleVec, i);    // titleVec
-        char authors[MAX_INPUT]; // Copia o conteúdo de book->authors para authors 
+        Book *book = vecRefGet(col->titleVec, i);    
+
+        char authors[strlen(book->authors)]; // Copia o conteúdo de book->authors para authors 
         strcpy(authors, book->authors); // Usado para não alterar o conteúdo de book->authors
 
         char *token = strtok(authors, " "); // Divide autores por espaço
@@ -60,16 +61,16 @@ int main(int argc, char *argv[])
         // Remove o '\n' no final da entrada
         input[strcspn(input, "\n")] = '\0'; // strcspn retorna o tamanho da string ate o primeiro '\n'
 
-        if (strcmp(input, "q") == 0)
+        if (strcmp(input, "q") == 0)    // QUIT
         {
             //printf("Freeing collection...\n"); // Debugging 
             dynCollFree(col);
             //printf("Collection freed.\n"); // Debugging 
             bstFree(authorTree); // Free the BST
             //printf("BST freed.\n");
-            break;                         // QUIT
+            break;                         
         }
-        else if (strcmp(input, "l") == 0)
+        else if (strcmp(input, "l") == 0)   // LIST books ordered by title
         {
             for (int i = 1; i < vecRefSize(col->titleVec); i++)
             {
@@ -78,7 +79,7 @@ int main(int argc, char *argv[])
                 book->title, book->isbn, book->authors, book->publisher);
             }
         }
-        else if (strcmp(input, "i") == 0)
+        else if (strcmp(input, "i") == 0)   // LIST books ordered by ISBN
         {
             for (int i = 1; i < vecRefSize(col->isbnVec); i++)
             {
@@ -86,7 +87,7 @@ int main(int argc, char *argv[])
                 printf("Título: %s; ISBN: %s; Autor(es): %s ; Editora: %s ;\n",
                 book->title, book->isbn, book->authors, book->publisher);
             }
-        }else if (strncmp(input, "i ", 2) == 0) // Verifica se o comando começa com "i "
+        }else if (strncmp(input, "i ", 2) == 0) // Search for a specific ISBN
         {
             char isbn[MAX_INPUT];
             sscanf(input + 2, "%s", isbn); // Lê o ISBN após o comando "i "
@@ -103,7 +104,7 @@ int main(int argc, char *argv[])
                 printf("Livro com ISBN %s não encontrado\n", isbn);
             }
         }
-        else if (strncmp(input, "a ", 2) == 0) // Check if the command starts with "a "
+        else if (strncmp(input, "a ", 2) == 0) // Search for books written by author
         {
             char author[MAX_INPUT];
             sscanf(input + 2, "%s", author); // Read the author's name after the command "a "
