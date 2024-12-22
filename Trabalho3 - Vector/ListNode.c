@@ -69,10 +69,10 @@ void lRefFree(LNode *head) {
     LNode *current = head; // Inicia no cabeçalho da lista
     LNode *nextNode;       // Ponteiro para o próximo nó
 
-    // Percorre a lista e libera a memória dos nós
+    // Percorre a lista e liberta a memória dos nós
     while (current != NULL) {
         nextNode = current->next; // Armazena o próximo nó
-        free(current);             // Libera o nó atual
+        free(current);             // Liberta o nó atual
         current = nextNode;        // Avança para o próximo nó
     }
 }

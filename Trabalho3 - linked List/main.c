@@ -12,7 +12,9 @@
 
 #define MAX_INPUT 128
 
-TNode *authorTree = NULL; // Global variable for the binary search tree
+
+
+TNode *authorTree = NULL; // BST innit
 
 int main(int argc, char *argv[])
 {
@@ -31,18 +33,19 @@ int main(int argc, char *argv[])
     dynCollFill(col, fileName);
 
     // Initialize the binary search tree for authors
-    for (int i = 1; i < vecRefSize(col->titleVec); i++)
-    {
-        Book *book = vecRefGet(col->titleVec, i);
-        char *authors = book->authors;
-        char *token = strtok(authors, " "); // Split authors by space
-        while (token != NULL)
-        {
-            bstAdd(&authorTree, token, book); // Add each word to the BST
-            token = strtok(NULL, " "); // Get the next word
+    for (int i = 1; i < vecRefSize(col->titleVec); i++){
+        Book *book = vecRefGet(col->titleVec, i);    // titleVec
+        char authors[MAX_INPUT]; // Copia o conteúdo de book->authors para authors 
+        strcpy(authors, book->authors); // Usado para não alterar o conteúdo de book->authors
+
+        char *token = strtok(authors, " "); // Divide autores por espaço
+        while (token != NULL){
+            bstAdd(&authorTree, token, book); // Adiciona cada palavra à BST
+            token = strtok(NULL, " "); // Obtém a próxima palavra
         }
     }
     bstBalance(&authorTree);  
+    //printBST(authorTree, 0);
 
     char input[MAX_INPUT];
     while (True)
@@ -61,8 +64,9 @@ int main(int argc, char *argv[])
         {
             //printf("Freeing collection...\n"); // Debugging 
             dynCollFree(col);
-            bstFree(authorTree); // Free the BST
             //printf("Collection freed.\n"); // Debugging 
+            bstFree(authorTree); // Free the BST
+            //printf("BST freed.\n");
             break;                         // QUIT
         }
         else if (strcmp(input, "l") == 0)
@@ -96,7 +100,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                printf("Livro com ISBN %s não encontrado.\n", isbn);
+                printf("Livro com ISBN %s não encontrado\n", isbn);
             }
         }
         else if (strncmp(input, "a ", 2) == 0) // Check if the command starts with "a "
@@ -111,7 +115,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                printf("Nenhum livro encontrado para o autor %s.\n", author);
+                printf("Nenhum livro encontrado para o autor %s\n", author);
             }
         }
     }

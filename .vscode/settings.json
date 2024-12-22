@@ -58,6 +58,7 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
     "processfile.h": "c",
-    "vecmanage.h": "c"
+    "vecmanage.h": "c",
+    "treenode.h": "c"
   }
 }

@@ -10,6 +10,8 @@ typedef struct tNode{
     LNode *head; 
 } TNode;
 
+void printBST(TNode *node, int level);
+
 void bstAdd(TNode **rootPtr, char *namWord, Book *ref);
 
 void collectNodes(TNode *root, TNode **nodes, int *index);

@@ -5,12 +5,36 @@
 
 
 
+void printBST(TNode *node, int level) {
+    if (node == NULL) {
+        return;
+    }
+
+    // Aumenta o nível para a próxima chamada recursiva
+    level++;
+
+    // Imprime o filho direito primeiro (para que fique à direita na visualização)
+    printBST(node->right, level);
+
+    // Imprime o espaço de indentação
+    for (int i = 0; i < level - 1; i++) {
+        printf("\t"); // 1 tab espaços para cada nível
+    }
+
+    // Imprime o nó atual
+    printf("%s\n", node->word);
+
+    // Imprime o filho esquerdo
+    printBST(node->left, level);
+}
+
+
 void bstAdd(TNode **rootPtr, char *namWord, Book *ref) {
     // Se a árvore estiver vazia, cria um novo nó
     if (*rootPtr == NULL) {
         *rootPtr = (TNode *)malloc(sizeof(TNode));
         if (*rootPtr == NULL) {
-            return; // Falha na alocação de memória
+            return; // Memalloc fail
         }
         (*rootPtr)->word = strdup(namWord); // Duplica a string da palavra
         (*rootPtr)->head = NULL; // Inicializa a lista de referências
@@ -39,9 +63,9 @@ void collectNodes(TNode *root, TNode **nodes, int *index) {
     if (root == NULL) {
         return;
     }
-    collectNodes(root->left, nodes, index); // Visita a subárvore esquerda
+    collectNodes(root->left, nodes, index); // Guarda os nós da subárvore esquerda
     nodes[(*index)++] = root; // Adiciona o nó atual ao vetor
-    collectNodes(root->right, nodes, index); // Visita a subárvore direita
+    collectNodes(root->right, nodes, index); // Guarda os nós da subárvore direita
 }
 
 // Função auxiliar para construir uma árvore balanceada a partir de um vetor
@@ -50,7 +74,7 @@ TNode *buildBalancedTree(TNode **nodes, int start, int end) {
         return NULL;
     }
     int mid = (start + end) / 2; // Encontra o meio do vetor
-    TNode *node = nodes[mid]; // O nó do meio se torna a raiz da subárvore
+    TNode *node = nodes[mid]; // O nó do meio torna-se a raiz da subárvore
     node->left = buildBalancedTree(nodes, start, mid - 1); // Constrói a subárvore esquerda
     node->right = buildBalancedTree(nodes, mid + 1, end); // Constrói a subárvore direita
     return node;
@@ -61,10 +85,9 @@ void bstBalance(TNode **rootPtr) {
     if (*rootPtr == NULL) {
         return; // Se a árvore estiver vazia, não faz nada
     }
-
-    // Coleta todos os nós em um vetor
+    // Guarda todos os nós em um vetor
     int size = 0;
-    TNode *nodes[1000]; // Supondo que a árvore não terá mais de 1000 nós
+    TNode *nodes[3000]; // Supondo que a árvore não terá mais de 3000 nós
     collectNodes(*rootPtr, nodes, &size);
 
     // Reconstrói a árvore balanceada
@@ -77,8 +100,6 @@ LNode *bstSearch(TNode *root, char *namWord) {
         return NULL; // Palavra não encontrada
     }
 
-    
-
     int cmp = strcmp(namWord, root->word);
     if (cmp < 0) {
         return bstSearch(root->left, namWord); // Busca na subárvore esquerda
@@ -87,16 +108,20 @@ LNode *bstSearch(TNode *root, char *namWord) {
     } else {
         return root->head; // Palavra encontrada, retorna a lista de referências
     }
+    if (strstr(root->word, namWord) != NULL) {
+        return root->head; // Retorna a lista de referências se for uma substring
+    }
+
 }
 
 
-// Função para liberar a memória ocupada pela árvore
+// Função para libertar a memória ocupada pela árvore
 void bstFree(TNode *root) {
     if (root != NULL) {
-        bstFree(root->left);  // Libera a subárvore esquerda
-        bstFree(root->right); // Libera a subárvore direita
-        lRefFree(root->head);  // Libera a lista de referências
-        free(root->word);      // Libera a palavra
-        free(root);            // Libera o nó
+        bstFree(root->left);  // Liberta a subárvore esquerda
+        bstFree(root->right); // Liberta a subárvore direita
+        lRefFree(root->head);  // Liberta a lista de referências
+        free(root->word);      // Liberta a palavra
+        free(root);            // Liberta o nó
     }
 }
